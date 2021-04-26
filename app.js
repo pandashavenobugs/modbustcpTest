@@ -8,7 +8,7 @@ const modbustest = Modbus.client.tcp.complete({
 const socket = new net.Socket();
 
 const options = {
-  'host':'192.168.0.65',
+  'host':'192.168.0.67',
   'port':'502'
 }
 
