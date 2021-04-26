@@ -42,6 +42,7 @@ socket.on('connect',()=>{
   })
   client.readHoldingRegisters(4,2).then((resp)=>{
     // REAL DATA READING positive and negative 
+    //https://stackoverflow.com/questions/56257673/reading-32-bit-float-from-modbus-tcp-using-node-red/67263659#67263659
     console.log(resp.response.body);
     const testData =resp.response.body.values;
     const testData1 = resp.response.body.valuesAsArray;
@@ -52,8 +53,8 @@ socket.on('connect',()=>{
     //bufferData = resp.response.body.valuesAsBuffer.
     //const bufferData1 = resp.response.body.valuesAsBuffer.readUInt32BE(1);
     
-    console.log('testData :' +testData);
-    console.log('testData1 :'+testData1)
+    //console.log('testData :' +testData);
+    //console.log('testData1 :'+testData1)
     const buf = Buffer.allocUnsafe(4);
     
     buf.writeUInt16BE(resp.response.body.values[0],2);
@@ -67,49 +68,46 @@ socket.on('connect',()=>{
   }).catch(error=>{
     //console.log(error);
   })
-  client.readHoldingRegisters(4,2).then((resp)=>{
+  client.readHoldingRegisters(0,1).then((resp)=>{
+    //https://stackoverflow.com/questions/61775157/how-can-i-convert-negative-binary-number-to-int
     //reading 16 bit data
+    //console.log(resp.response.body);
+    //const testData =resp.response.body.values;
+    //const testData1 = resp.response.body.valuesAsArray;
+    
+    //console.log('testData :' +testData);
+    //console.log('testData1 :'+testData1);
+
+    // to read negative 16 bit integer
+    if(resp.response.body.values[0]> 32767 ){
+      //console.log(resp.response.body.values[0]-65536); to read negative data
+    }
+    
+  }).catch(error=>{
+    //console.log(error);
+  })
+
+  client.readHoldingRegisters(6,2).then((resp)=>{
+    //https://stackoverflow.com/questions/61775157/how-can-i-convert-negative-binary-number-to-int
+    //reading 32 bit integer data
     console.log(resp.response.body);
     const testData =resp.response.body.values;
     const testData1 = resp.response.body.valuesAsArray;
     
     console.log('testData :' +testData);
-    console.log('testData1 :'+testData1)
-    const buf = Buffer.allocUnsafe(4);
-    
-    
-    //console.log(uint16ToFloat32(54464,1));
-    
-
+    console.log('testData1 :'+testData1);
+    const uint32Data = (resp.response.body.values[0])+(resp.response.body.values[1]<<16); //as uint32data
+    console.log(uint32Data);
+    // to read negative 16 bit integer
+    if(resp.response.body.values[0]> 32767 ){
+      //console.log(resp.response.body.values[0]-65536); to read negative data
+    }
     
   }).catch(error=>{
     //console.log(error);
   })
-  // client.writeSingleRegister(0,6).then(resp=>{
-  //   console.log(resp)
-  // }).catch(err=>{
-
-  // })
 })
 
-
-function uint16ToFloat32(low, high) {
-  var buffer = new ArrayBuffer(4);
-  var intView = new Uint16Array(buffer);
-  var floatView = new Float32Array(buffer);
-
-  intView[0] = low;
-  intView[1] = high;
-  return floatView[0];
-}
-function float32ToUint16(value) {
-  var buffer = new ArrayBuffer(4);
-  var intView = new Uint16Array(buffer);
-  var floatView = new Float32Array(buffer);
-
-  floatView[0] = value;
-  return [intView[0], intView[1]];
-}
 socket.connect(options);
 
 // socket.destroy()
