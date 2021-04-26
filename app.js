@@ -2,9 +2,7 @@ const Modbus = require('jsmodbus');
 
 const net = require('net');
 
-const modbustest = Modbus.client.tcp.complete({
 
-})
 const socket = new net.Socket();
 
 const options = {
