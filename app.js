@@ -98,10 +98,7 @@ socket.on('connect',()=>{
     console.log('testData1 :'+testData1);
     const uint32Data = (resp.response.body.values[0])+(resp.response.body.values[1]<<16); //as uint32data
     console.log(uint32Data);
-    // to read negative 16 bit integer
-    if(resp.response.body.values[0]> 32767 ){
-      //console.log(resp.response.body.values[0]-65536); to read negative data
-    }
+    // we dont need to take actions to convert negative or positive. thats okey
     
   }).catch(error=>{
     //console.log(error);
